@@ -18,6 +18,7 @@ public class XPHandler : MonoBehaviour
     private void OnEnable()
     {
         GameEvents.OnBattleConclude += GainXP;
+
     }
 
     private void OnDisable()
@@ -28,17 +29,23 @@ public class XPHandler : MonoBehaviour
     public void GainXP(BattleResultEventData data)
     {
         if (data.outcome >= 0)
-        {
+        {   
+            ///Calculated how the player gains xp by adding both style and rhythm and multiply it by a 100.
+            ///It will also display the current xp in both the console as well as in the game
             data.player.xp += (data.player.rhythm + data.player.style) * 100;
-            Debug.Log(data.player.xp);
+            GameEvents.PlayerXPGain(data.player.xp);
+            Debug.Log("XP:"+data.player.xp);
         }
 
+        ///This variable is here to determine the xp required to level up. It will also increase the xp requirement everytime the player levels up.
         int xplevelcap = 500 + (data.player.level * 250);
         if (data.player.xp >= xplevelcap)
         {
+            ///This simply increases the level by one and reset the xp back to 0.
             data.player.level += 1;
+            GameEvents.PlayerLevelUp(data.player.level);
             data.player.xp = 0;
-            Debug.Log(data.player.level);
+            Debug.Log("Player level:" + data.player.level);
         }
 
     }

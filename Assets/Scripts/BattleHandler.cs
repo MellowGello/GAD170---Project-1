@@ -15,8 +15,8 @@ public static class BattleHandler
 {
     public static void Battle(BattleEventData data)
     {
-        //This needs to be replaced with some actual battle logic, at present 
-        // we just award the maximum possible win to the player
+        /// I added a random variable that simply has a randomized number each time the player dance.
+        /// As well as adding more into the random number, either positively or negatively, depending on the player's current luck level.
         float rand = Random.Range(-2.0f, 2.0f);
 
         if (data.player.luck >= 5)
@@ -25,14 +25,25 @@ public static class BattleHandler
         }
         else if (data.player.luck <= -5)
         {
-            rand -= Random.Range(-3.0f, 0.0f);
+            rand += Random.Range(-3.0f, 0.0f);
         }
 
-
+        ///I made a formula that determines whether the battle is a win or a loss.
+        ///The formula maybe simple, but this is the best I can get that makes the game balanced.
         float outcome = ((data.player.rhythm - data.player.style) + rand);
 
+        ///The Clamp feature is there to make the win at maximum of 1 and minimum of -1.
+        ///Then it displays the result of the battle by whether the player wins or lose in the console.
         outcome = Mathf.Clamp(outcome, -1.0f, 1.0f);
-        Debug.Log(outcome);
+        if (outcome >= 0.0f)
+        { 
+           Debug.Log("You Win!");
+        }
+        else if(outcome <= 0.0f)
+        {
+            Debug.Log("You Lose!");
+        }
+        
         
         var results = new BattleResultEventData(data.player, data.npc, outcome);
 
